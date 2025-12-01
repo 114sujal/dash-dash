@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Site Selection for Cloud Kitchens</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --color-primary: #FF6B35;
+            --color-secondary: #0277BD;
+            --color-success: #66BB6A;
+            --color-danger: #EF5350;
+            --color-warning: #FFA726;
+            --color-dark: #1F2121;
+            --color-light: #F5F5F5;
+            --color-white: #FFFFFF;
+            --color-text: #333333;
+            --color-text-light: #666666;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.15);
+            --shadow-lg: 0 8px 16px rgba(0,0,0,0.2);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--color-light);
+            color: var(--color-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: linear-gradient(135deg, var(--color-dark) 0%, #2d2f2f 100%);
+            color: var(--color-white);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--color-white);
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .nav-link:hover {
+            color: var(--color-primary);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--color-white);
+            transition: var(--transition);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--color-secondary) 0%, #0288D1 100%);
+            color: var(--color-white);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .hero-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--color-primary);
+        }
+
+        .metric-name {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-trend {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Section Styles */
+        .section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--color-dark);
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--color-text-light);
+            margin-bottom: 2rem;
+        }
+
+        /* Market Growth Section */
+        .chart-container {
+            background: var(--color-white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+            height: 400px;
+            position: relative;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 100%;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-box {
+            background: var(--color-white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .stat-box:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: var(--color-text-light);
+        }
+
+        /* Problem Statement */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .gauge-container {
+            background: var(--color-white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+
+        .gauge {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+
+        .gauge-circle {
+            transform: rotate(-90deg);
+        }
+
+        .gauge-bg {
+            fill: none;
+            stroke: #e0e0e0;
+            stroke-width: 20;
+        }
+
+        .gauge-progress {
+            fill: none;
+            stroke: var(--color-danger);
+            stroke-width: 20;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .gauge-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-dark);
+        }
+
+        .cost-breakdown {
+            background: var(--color-white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: var(--color-light);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .cost-item:hover {
+            transform: translateX(5px);
+        }
+
+        .cost-bar {
+            height: 8px;
+            background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-danger) 100%);
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+
+        /* Solution Section */
+        .solution-card {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #FF8551 100%);
+            color: var(--color-white);
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 2rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-item {
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Location Cards */
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn, .sort-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--color-primary);
+            background: var(--color-white);
+            color: var(--color-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .filter-btn.active, .sort-btn:hover {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        .locations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .location-card {
+            background: var(--color-white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            cursor: pointer;
+            border-left: 4px solid transparent;
+        }
+
+        .location-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-5px);
+        }
+
+        .location-card.risk-low {
+            border-left-color: var(--color-success);
+        }
+
+        .location-card.risk-medium {
+            border-left-color: var(--color-warning);
+        }
+
+        .location-card.risk-high {
+            border-left-color: var(--color-danger);
+        }
+
+        .location-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .location-rank {
+            background: var(--color-primary);
+            color: var(--color-white);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .location-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--color-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .location-pincode {
+            color: var(--color-text-light);
+            font-size: 0.9rem;
+        }
+
+        .location-score {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .location-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .metric {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-val {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--color-dark);
+        }
+
+        .location-badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(102, 187, 106, 0.15);
+            color: var(--color-success);
+            border: 1px solid var(--color-success);
+        }
+
+        .badge-warning {
+            background: rgba(255, 167, 38, 0.15);
+            color: var(--color-warning);
+            border: 1px solid var(--color-warning);
+        }
+
+        .badge-danger {
+            background: rgba(239, 83, 80, 0.15);
+            color: var(--color-danger);
+            border: 1px solid var(--color-danger);
+        }
+
+        .badge-info {
+            background: rgba(2, 119, 189, 0.15);
+            color: var(--color-secondary);
+            border: 1px solid var(--color-secondary);
+        }
+
+        .location-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .location-card.expanded .location-details {
+            max-height: 200px;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--color-light);
+        }
+
+        /* Financial Impact */
+        .scenario-toggle {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .scenario-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--color-secondary);
+            background: var(--color-white);
+            color: var(--color-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .scenario-btn.active {
+            background: var(--color-secondary);
+            color: var(--color-white);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .comparison-card {
+            background: var(--color-white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .comparison-card:hover {
+            transform: scale(1.05);
+        }
+
+        .comparison-label {
+            font-size: 1.1rem;
+            color: var(--color-text-light);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .comparison-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .comparison-change {
+            font-size: 0.95rem;
+            color: var(--color-success);
+            font-weight: 600;
+        }
+
+        /* Model Performance */
+        .performance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .performance-card {
+            background: var(--color-white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+
+        .performance-gauge {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem;
+            position: relative;
+        }
+
+        .circular-progress {
+            transform: rotate(-90deg);
+        }
+
+        .progress-bg {
+            fill: none;
+            stroke: #e0e0e0;
+            stroke-width: 10;
+        }
+
+        .progress-bar {
+            fill: none;
+            stroke: var(--color-success);
+            stroke-width: 10;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-dark);
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-item {
+            background: var(--color-white);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .timeline-item:hover {
+            transform: translateX(10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 2rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            border: 4px solid var(--color-white);
+            box-shadow: 0 0 0 2px var(--color-primary);
+        }
+
+        .timeline-item.in-progress::before {
+            background: var(--color-success);
+            box-shadow: 0 0 0 2px var(--color-success);
+        }
+
+        .phase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .phase-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-dark);
+        }
+
+        .phase-weeks {
+            background: var(--color-primary);
+            color: var(--color-white);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .activities {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .activities li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .activities li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--color-success);
+            font-weight: 700;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--color-dark);
+            color: var(--color-white);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .download-section {
+            margin-bottom: 2rem;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .download-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .download-btn:hover {
+            background: #FF8551;
+            transform: translateY(-2px);
+        }
+
+        .footer-info {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 60px;
+                flex-direction: column;
+                background: var(--color-dark);
+                width: 100%;
+                padding: 2rem;
+                transition: var(--transition);
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .section {
+                padding: 2rem 1rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .locations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-item::before {
+                display: none;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes countUp {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #FFE57F 0%, #FFD54F 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .highlight-box h3 {
+            color: var(--color-dark);
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">🍽️ CloudKitchen AI</div>
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#hero" class="nav-link">Home</a></li>
+                <li><a href="#market" class="nav-link">Market</a></li>
+                <li><a href="#problem" class="nav-link">Problem</a></li>
+                <li><a href="#solution" class="nav-link">Solution</a></li>
+                <li><a href="#locations" class="nav-link">Locations</a></li>
+                <li><a href="#financial" class="nav-link">ROI</a></li>
+                <li><a href="#performance" class="nav-link">Performance</a></li>
+                <li><a href="#roadmap" class="nav-link">Roadmap</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <h1>AI-Driven Site Selection for Cloud Kitchens</h1>
+        <p>Strategic Location Optimization using Machine Learning</p>
+        <div class="hero-metrics">
+            <div class="metric-card fade-in" style="animation-delay: 0.1s">
+                <div class="metric-value" data-target="9081">0</div>
+                <div class="metric-name">Market Size (2024)</div>
+                <div class="metric-trend">↑ 16.66% CAGR</div>
+            </div>
+            <div class="metric-card fade-in" style="animation-delay: 0.2s">
+                <div class="metric-value">30-40%</div>
+                <div class="metric-name">Current Failure Rate</div>
+                <div class="metric-trend">↓ Problem Size</div>
+            </div>
+            <div class="metric-card fade-in" style="animation-delay: 0.3s">
+                <div class="metric-value" data-target="687">0</div>
+                <div class="metric-name">Quantified ROI</div>
+                <div class="metric-trend">Annual Savings (Lakh ₹)</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Market Opportunity Section -->
+    <section class="section" id="market">
+        <h2 class="section-title">📈 Market Opportunity</h2>
+        <p class="section-subtitle">India's cloud kitchen market is experiencing exponential growth with significant expansion potential</p>
+        
+        <div class="chart-container">
+            <div class="chart-wrapper">
+                <canvas id="marketChart"></canvas>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-value">₹9,081 Cr</div>
+                <div class="stat-label">2024 Market Size</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">₹27,000+ Cr</div>
+                <div class="stat-label">2032 Projection</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">16.66%</div>
+                <div class="stat-label">CAGR Growth Rate</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">3x</div>
+                <div class="stat-label">Growth Multiple</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Statement Section -->
+    <section class="section" id="problem">
+        <h2 class="section-title">⚠️ The Problem</h2>
+        <p class="section-subtitle">Poor location decisions lead to significant financial losses in the QSR industry</p>
+        
+        <div class="problem-grid">
+            <div class="gauge-container">
+                <h3>Current Failure Rate</h3>
+                <div class="gauge">
+                    <svg class="gauge-circle" viewBox="0 0 200 200">
+                        <circle class="gauge-bg" cx="100" cy="100" r="90"></circle>
+                        <circle class="gauge-progress" cx="100" cy="100" r="90" id="failureGauge"></circle>
+                    </svg>
+                    <div class="gauge-text" id="failureText">0%</div>
+                </div>
+                <p style="margin-top: 1rem; color: var(--color-text-light);">of outlets fail within 18 months</p>
+            </div>
+
+            <div class="cost-breakdown">
+                <h3>Annual Cost Breakdown</h3>
+                <p style="color: var(--color-text-light); margin-bottom: 1rem;">Per 50-outlet chain: ₹889 Lakh</p>
+                
+                <div class="cost-item">
+                    <div>
+                        <strong>Rent (18 months)</strong>
+                        <div class="cost-bar" style="width: 21%;"></div>
+                    </div>
+                    <div style="font-weight: 700; color: var(--color-primary);">₹189L (21%)</div>
+                </div>
+                <div class="cost-item">
+                    <div>
+                        <strong>Lost Revenue</strong>
+                        <div class="cost-bar" style="width: 31%;"></div>
+                    </div>
+                    <div style="font-weight: 700; color: var(--color-primary);">₹280L (31%)</div>
+                </div>
+                <div class="cost-item">
+                    <div>
+                        <strong>Closure Write-off</strong>
+                        <div class="cost-bar" style="width: 39%;"></div>
+                    </div>
+                    <div style="font-weight: 700; color: var(--color-primary);">₹350L (39%)</div>
+                </div>
+                <div class="cost-item">
+                    <div>
+                        <strong>Wasted Marketing</strong>
+                        <div class="cost-bar" style="width: 9%;"></div>
+                    </div>
+                    <div style="font-weight: 700; color: var(--color-primary);">₹70L (9%)</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section class="section" id="solution">
+        <h2 class="section-title">🤖 AI-Powered Solution</h2>
+        <p class="section-subtitle">Ensemble machine learning model for data-driven location decisions</p>
+        
+        <div class="solution-card">
+            <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">XGBoost + Neural Network Ensemble</h3>
+            <p style="font-size: 1.1rem; opacity: 0.95;">Our advanced ML model integrates 40+ features from multiple data sources to predict location success with 88% accuracy</p>
+            
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <h4>40+ Features</h4>
+                    <p>Comprehensive data points</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔗</div>
+                    <h4>3 Data Sources</h4>
+                    <p>Zomato, Swiggy, Census</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <h4>Real-time Analysis</h4>
+                    <p>Instant predictions</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <h4>88% Success Rate</h4>
+                    <p>Validated accuracy</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Delhi Case Study Section -->
+    <section class="section" id="locations">
+        <h2 class="section-title">📍 Delhi NCR: Top Locations</h2>
+        <p class="section-subtitle">AI-ranked locations based on comprehensive analysis of 40+ parameters</p>
+        
+        <div class="highlight-box">
+            <h3>🏆 Top Recommendations</h3>
+            <p><strong>Karol Bagh (92)</strong>, <strong>Dwarka (89)</strong>, and <strong>Malviya Nagar (87)</strong> emerge as the strongest candidates with low risk and high revenue potential.</p>
+            <p style="margin-top: 0.5rem;">⚠️ <strong>Avoid:</strong> Chandni Chowk due to high cannibalization risk (25-35%)</p>
+        </div>
+
+        <div class="filter-controls">
+            <button class="filter-btn active" onclick="filterLocations('all')">All Locations</button>
+            <button class="filter-btn" onclick="filterLocations('low')">Low Risk</button>
+            <button class="filter-btn" onclick="filterLocations('medium')">Medium Risk</button>
+            <button class="filter-btn" onclick="filterLocations('high')">High Risk</button>
+            <button class="sort-btn" onclick="sortLocations('score')">Sort by Score</button>
+            <button class="sort-btn" onclick="sortLocations('revenue')">Sort by Revenue</button>
+        </div>
+
+        <div class="locations-grid" id="locationsGrid"></div>
+    </section>
+
+    <!-- Financial Impact Section -->
+    <section class="section" id="financial">
+        <h2 class="section-title">💰 Financial Impact Analysis</h2>
+        <p class="section-subtitle">Compare business outcomes with and without AI-driven site selection</p>
+        
+        <div class="scenario-toggle">
+            <button class="scenario-btn" onclick="changeScenario('before')">Before AI</button>
+            <button class="scenario-btn active" onclick="changeScenario('base')">Base Case</button>
+            <button class="scenario-btn" onclick="changeScenario('conservative')">Conservative</button>
+            <button class="scenario-btn" onclick="changeScenario('optimistic')">Optimistic</button>
+        </div>
+
+        <div class="comparison-grid" id="financialGrid">
+            <div class="comparison-card">
+                <div class="comparison-label">Success Rate</div>
+                <div class="comparison-value" id="successRate">88%</div>
+                <div class="comparison-change" id="successChange">+23% improvement</div>
+            </div>
+            <div class="comparison-card">
+                <div class="comparison-label">Revenue per Outlet</div>
+                <div class="comparison-value" id="revenueValue">₹24L</div>
+                <div class="comparison-change" id="revenueChange">+₹6L monthly</div>
+            </div>
+            <div class="comparison-card">
+                <div class="comparison-label">Payback Period</div>
+                <div class="comparison-value" id="paybackValue">13 mo</div>
+                <div class="comparison-change" id="paybackChange">-7 months faster</div>
+            </div>
+            <div class="comparison-card">
+                <div class="comparison-label">Annual Profit (50 outlets)</div>
+                <div class="comparison-value" id="profitValue">₹1,141L</div>
+                <div class="comparison-change" id="profitChange">+₹687L gain</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Model Performance Section -->
+    <section class="section" id="performance">
+        <h2 class="section-title">📊 Model Performance Metrics</h2>
+        <p class="section-subtitle">Validated performance indicators demonstrating model reliability and accuracy</p>
+        
+        <div class="performance-grid">
+            <div class="performance-card">
+                <div class="performance-gauge">
+                    <svg class="circular-progress" viewBox="0 0 120 120">
+                        <circle class="progress-bg" cx="60" cy="60" r="54"></circle>
+                        <circle class="progress-bar" cx="60" cy="60" r="54" id="r2Progress"></circle>
+                    </svg>
+                    <div class="progress-text" id="r2Text">0.80</div>
+                </div>
+                <h4>R² Score</h4>
+                <p style="color: var(--color-text-light); font-size: 0.9rem;">Model fit quality</p>
+            </div>
+
+            <div class="performance-card">
+                <div class="performance-gauge">
+                    <svg class="circular-progress" viewBox="0 0 120 120">
+                        <circle class="progress-bg" cx="60" cy="60" r="54"></circle>
+                        <circle class="progress-bar" cx="60" cy="60" r="54" id="precisionProgress" style="stroke: var(--color-secondary);"></circle>
+                    </svg>
+                    <div class="progress-text" id="precisionText">85%</div>
+                </div>
+                <h4>Precision</h4>
+                <p style="color: var(--color-text-light); font-size: 0.9rem;">High-risk identification</p>
+            </div>
+
+            <div class="performance-card">
+                <div class="performance-gauge">
+                    <svg class="circular-progress" viewBox="0 0 120 120">
+                        <circle class="progress-bg" cx="60" cy="60" r="54"></circle>
+                        <circle class="progress-bar" cx="60" cy="60" r="54" id="recallProgress" style="stroke: var(--color-warning);"></circle>
+                    </svg>
+                    <div class="progress-text" id="recallText">78%</div>
+                </div>
+                <h4>Recall</h4>
+                <p style="color: var(--color-text-light); font-size: 0.9rem;">Failure detection</p>
+            </div>
+
+            <div class="performance-card">
+                <div class="performance-gauge">
+                    <svg class="circular-progress" viewBox="0 0 120 120">
+                        <circle class="progress-bg" cx="60" cy="60" r="54"></circle>
+                        <circle class="progress-bar" cx="60" cy="60" r="54" id="rocProgress" style="stroke: var(--color-primary);"></circle>
+                    </svg>
+                    <div class="progress-text" id="rocText">0.82</div>
+                </div>
+                <h4>ROC-AUC</h4>
+                <p style="color: var(--color-text-light); font-size: 0.9rem;">Classification accuracy</p>
+            </div>
+
+            <div class="performance-card">
+                <div style="font-size: 3rem; margin-bottom: 1rem; color: var(--color-success);">±₹8.5L</div>
+                <h4>Mean Absolute Error</h4>
+                <p style="color: var(--color-text-light); font-size: 0.9rem;">Monthly revenue variance</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Implementation Roadmap Section -->
+    <section class="section" id="roadmap">
+        <h2 class="section-title">🗺️ Implementation Roadmap</h2>
+        <p class="section-subtitle">5-phase deployment strategy for AI-driven site selection system</p>
+        
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="phase-header">
+                    <div class="phase-title">Phase 1: Planning</div>
+                    <div class="phase-weeks">Weeks 1-2</div>
+                </div>
+                <ul class="activities">
+                    <li>Finalize target locations and expansion zones</li>
+                    <li>Negotiate rent agreements and terms</li>
+                    <li>Budget capital expenditure requirements</li>
+                </ul>
+            </div>
+
+            <div class="timeline-item in-progress">
+                <div class="phase-header">
+                    <div class="phase-title">Phase 2: Data Collection</div>
+                    <div class="phase-weeks">Weeks 3-6</div>
+                </div>
+                <ul class="activities">
+                    <li>Scrape restaurant data from Zomato &amp; Swiggy APIs</li>
+                    <li>Collect demographic data from census sources</li>
+                    <li>Gather historical performance metrics</li>
+                </ul>
+            </div>
+
+            <div class="timeline-item">
+                <div class="phase-header">
+                    <div class="phase-title">Phase 3: Model Development</div>
+                    <div class="phase-weeks">Weeks 7-14</div>
+                </div>
+                <ul class="activities">
+                    <li>Engineer features from raw data sources</li>
+                    <li>Train XGBoost &amp; Neural Network ensemble</li>
+                    <li>Validate model performance and accuracy</li>
+                </ul>
+            </div>
+
+            <div class="timeline-item">
+                <div class="phase-header">
+                    <div class="phase-title">Phase 4: Pilot Deployment</div>
+                    <div class="phase-weeks">Weeks 15-20</div>
+                </div>
+                <ul class="activities">
+                    <li>Deploy model to 3 high-confidence locations</li>
+                    <li>Monitor KPIs and early performance indicators</li>
+                    <li>Iterate model based on real-world feedback</li>
+                </ul>
+            </div>
+
+            <div class="timeline-item">
+                <div class="phase-header">
+                    <div class="phase-title">Phase 5: Full Rollout</div>
+                    <div class="phase-weeks">Weeks 21+</div>
+                </div>
+                <ul class="activities">
+                    <li>Launch all 10 recommended locations</li>
+                    <li>Execute comprehensive marketing campaigns</li>
+                    <li>Establish monthly monitoring and optimization</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="download-section">
+            <h3>📥 Download Resources</h3>
+            <div class="download-buttons">
+                <button class="download-btn" onclick="downloadFile('docx')">
+                    <i class="fas fa-file-word"></i> Download DOCX
+                </button>
+                <button class="download-btn" onclick="downloadFile('pdf')">
+                    <i class="fas fa-file-pdf"></i> Download PDF
+                </button>
+                <button class="download-btn" onclick="downloadFile('csv')">
+                    <i class="fas fa-file-csv"></i> Download CSV
+                </button>
+                <button class="download-btn" onclick="shareProject()">
+                    <i class="fas fa-share-alt"></i> Share Project
+                </button>
+            </div>
+        </div>
+        
+        <div class="footer-info">
+            <p><strong>AI-Driven Site Selection for Cloud Kitchens</strong></p>
+            <p>MBA Academic Research Project | December 2025</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">© 2025 CloudKitchen AI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Location Data
+        const locations = [
+            {rank: 1, name: "Karol Bagh", pincode: "110085", score: 92, risk: "Low", revenue: 28, payback: 12, recommendation: "APPROVE", cannibalization: "None"},
+            {rank: 2, name: "Dwarka", pincode: "110018", score: 89, risk: "Low", revenue: 26, payback: 13, recommendation: "APPROVE", cannibalization: "Minor (5-10%)"},
+            {rank: 3, name: "Malviya Nagar", pincode: "110007", score: 87, risk: "Low", revenue: 27, payback: 12, recommendation: "APPROVE", cannibalization: "None"},
+            {rank: 4, name: "Shalimar Bagh", pincode: "110016", score: 85, risk: "Medium", revenue: 24, payback: 14, recommendation: "APPROVE", cannibalization: "None"},
+            {rank: 5, name: "Chandni Chowk", pincode: "110001", score: 83, risk: "High", revenue: 22, payback: 15, recommendation: "REJECT", cannibalization: "High (25-35%)"},
+            {rank: 6, name: "Sector 12, Dwarka", pincode: "110019", score: 81, risk: "Medium", revenue: 21, payback: 15, recommendation: "APPROVE", cannibalization: "None"},
+            {rank: 7, name: "Vasant Kunj", pincode: "110092", score: 79, risk: "Medium", revenue: 25, payback: 13, recommendation: "MONITOR", cannibalization: "Minor (5-10%)"},
+            {rank: 8, name: "Chhatarpur", pincode: "110009", score: 76, risk: "Medium-High", revenue: 19, payback: 17, recommendation: "APPROVE", cannibalization: "None"},
+            {rank: 9, name: "Mehrauli", pincode: "110003", score: 73, risk: "High", revenue: 18, payback: 18, recommendation: "APPROVE", cannibalization: "None"},
+            {rank: 10, name: "Rohini", pincode: "110015", score: 71, risk: "High", revenue: 17, payback: 19, recommendation: "APPROVE", cannibalization: "Minor (5-10%)"}
+        ];
+
+        let currentLocations = [...locations];
+        let currentScenario = 'base';
+
+        // Financial Scenarios
+        const scenarios = {
+            before: {success: 65, revenue: 18, payback: 20, profit: 454},
+            base: {success: 88, revenue: 24, payback: 13, profit: 1141},
+            conservative: {success: 80, revenue: 21, payback: 15, profit: 850},
+            optimistic: {success: 92, revenue: 28, payback: 11, profit: 1450}
+        };
+
+        // Toggle Mobile Menu
+        function toggleMenu() {
+            const menu = document.getElementById('navMenu');
+            menu.classList.toggle('active');
+        }
+
+        // Smooth Scroll
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('navMenu').classList.remove('active');
+            });
+        });
+
+        // Counter Animation
+        function animateCounter(element, target, suffix = '') {
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = Math.round(target) + suffix;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.round(current) + suffix;
+                }
+            }, 30);
+        }
+
+        // Initialize counters on page load
+        window.addEventListener('load', () => {
+            const counters = document.querySelectorAll('.metric-value[data-target]');
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target'));
+                animateCounter(counter, target);
+            });
+
+            // Animate failure gauge
+            setTimeout(() => {
+                const gauge = document.getElementById('failureGauge');
+                const text = document.getElementById('failureText');
+                const circumference = 2 * Math.PI * 90;
+                const percent = 35;
+                const offset = circumference - (percent / 100) * circumference;
+                gauge.style.strokeDasharray = circumference;
+                gauge.style.strokeDashoffset = offset;
+                
+                let current = 0;
+                const timer = setInterval(() => {
+                    if (current >= percent) {
+                        text.textContent = percent + '%';
+                        clearInterval(timer);
+                    } else {
+                        current++;
+                        text.textContent = current + '%';
+                    }
+                }, 30);
+            }, 500);
+        });
+
+        // Render Location Cards
+        function renderLocations(locationsToRender = currentLocations) {
+            const grid = document.getElementById('locationsGrid');
+            grid.innerHTML = '';
+            
+            locationsToRender.forEach(location => {
+                const riskClass = location.risk.toLowerCase().includes('high') ? 'risk-high' : 
+                                 location.risk.toLowerCase().includes('medium') ? 'risk-medium' : 'risk-low';
+                
+                const badgeClass = location.recommendation === 'APPROVE' ? 'badge-success' :
+                                  location.recommendation === 'REJECT' ? 'badge-danger' : 'badge-warning';
+                
+                const riskBadgeClass = riskClass === 'risk-low' ? 'badge-success' :
+                                       riskClass === 'risk-medium' ? 'badge-warning' : 'badge-danger';
+                
+                const card = document.createElement('div');
+                card.className = `location-card ${riskClass}`;
+                card.innerHTML = `
+                    <div class="location-header">
+                        <div>
+                            <div class="location-name">${location.name}</div>
+                            <div class="location-pincode">PIN: ${location.pincode}</div>
+                        </div>
+                        <div class="location-rank">#${location.rank}</div>
+                    </div>
+                    <div class="location-score">${location.score}</div>
+                    <div class="location-metrics">
+                        <div class="metric">
+                            <div class="metric-label">Revenue Potential</div>
+                            <div class="metric-val">₹${location.revenue}L/mo</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Payback Period</div>
+                            <div class="metric-val">${location.payback} months</div>
+                        </div>
+                    </div>
+                    <div class="location-badges">
+                        <span class="badge ${badgeClass}">${location.recommendation}</span>
+                        <span class="badge ${riskBadgeClass}">${location.risk} Risk</span>
+                    </div>
+                    <div class="location-details">
+                        <div class="metric">
+                            <div class="metric-label">Cannibalization Risk</div>
+                            <div class="metric-val">${location.cannibalization}</div>
+                        </div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => {
+                    card.classList.toggle('expanded');
+                });
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Filter Locations
+        function filterLocations(filter) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (filter === 'all') {
+                currentLocations = [...locations];
+            } else {
+                currentLocations = locations.filter(loc => 
+                    loc.risk.toLowerCase().includes(filter)
+                );
+            }
+            renderLocations();
+        }
+
+        // Sort Locations
+        function sortLocations(sortBy) {
+            if (sortBy === 'score') {
+                currentLocations.sort((a, b) => b.score - a.score);
+            } else if (sortBy === 'revenue') {
+                currentLocations.sort((a, b) => b.revenue - a.revenue);
+            }
+            renderLocations();
+        }
+
+        // Change Financial Scenario
+        function changeScenario(scenario) {
+            currentScenario = scenario;
+            document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const data = scenarios[scenario];
+            const before = scenarios.before;
+            
+            document.getElementById('successRate').textContent = data.success + '%';
+            document.getElementById('revenueValue').textContent = '₹' + data.revenue + 'L';
+            document.getElementById('paybackValue').textContent = data.payback + ' mo';
+            document.getElementById('profitValue').textContent = '₹' + data.profit.toLocaleString() + 'L';
+            
+            if (scenario === 'before') {
+                document.getElementById('successChange').textContent = 'Baseline';
+                document.getElementById('revenueChange').textContent = 'Current state';
+                document.getElementById('paybackChange').textContent = 'No AI';
+                document.getElementById('profitChange').textContent = 'Pre-optimization';
+            } else {
+                const successDiff = data.success - before.success;
+                const revenueDiff = data.revenue - before.revenue;
+                const paybackDiff = before.payback - data.payback;
+                const profitDiff = data.profit - before.profit;
+                
+                document.getElementById('successChange').textContent = '+' + successDiff + '% improvement';
+                document.getElementById('revenueChange').textContent = '+₹' + revenueDiff + 'L monthly';
+                document.getElementById('paybackChange').textContent = '-' + paybackDiff + ' months faster';
+                document.getElementById('profitChange').textContent = '+₹' + profitDiff + 'L gain';
+            }
+        }
+
+        // Download File
+        function downloadFile(type) {
+            alert(`Downloading ${type.toUpperCase()} report... (Demo functionality)`);
+        }
+
+        // Share Project
+        function shareProject() {
+            alert('Share functionality enabled! (Demo)');
+        }
+
+        // Initialize Market Growth Chart
+        const marketCtx = document.getElementById('marketChart').getContext('2d');
+        const marketChart = new Chart(marketCtx, {
+            type: 'line',
+            data: {
+                labels: [2024, 2025, 2026, 2027, 2028, 2029, 2030, 2032],
+                datasets: [{
+                    label: 'Market Size (₹ Crore)',
+                    data: [9081, 10571, 12302, 14335, 16701, 19459, 22862, 28987],
+                    borderColor: '#FF6B35',
+                    backgroundColor: 'rgba(255, 107, 53, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: '#FF6B35',
+                    pointBorderColor: '#FFFFFF',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            font: {
+                                size: 14,
+                                weight: '600'
+                            },
+                            padding: 20
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleFont: {
+                            size: 14,
+                            weight: '600'
+                        },
+                        bodyFont: {
+                            size: 13
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                return 'Market Size: ₹' + context.parsed.y.toLocaleString() + ' Cr';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value.toLocaleString() + ' Cr';
+                            },
+                            font: {
+                                size: 12
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Animate Performance Gauges
+        function animateCircularProgress(elementId, percent, textId, isDecimal = false) {
+            const circle = document.getElementById(elementId);
+            const text = document.getElementById(textId);
+            const radius = 54;
+            const circumference = 2 * Math.PI * radius;
+            const offset = circumference - (percent / 100) * circumference;
+            
+            circle.style.strokeDasharray = circumference;
+            circle.style.strokeDashoffset = circumference;
+            
+            setTimeout(() => {
+                circle.style.transition = 'stroke-dashoffset 1.5s ease';
+                circle.style.strokeDashoffset = offset;
+            }, 300);
+            
+            if (isDecimal) {
+                let current = 0;
+                const target = percent / 100;
+                const timer = setInterval(() => {
+                    current += 0.01;
+                    if (current >= target) {
+                        text.textContent = target.toFixed(2);
+                        clearInterval(timer);
+                    } else {
+                        text.textContent = current.toFixed(2);
+                    }
+                }, 15);
+            } else {
+                let current = 0;
+                const timer = setInterval(() => {
+                    if (current >= percent) {
+                        text.textContent = percent + '%';
+                        clearInterval(timer);
+                    } else {
+                        current++;
+                        text.textContent = current + '%';
+                    }
+                }, 15);
+            }
+        }
+
+        // Observer for Performance Section
+        const performanceObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCircularProgress('r2Progress', 80, 'r2Text', true);
+                    animateCircularProgress('precisionProgress', 85, 'precisionText');
+                    animateCircularProgress('recallProgress', 78, 'recallText');
+                    animateCircularProgress('rocProgress', 82, 'rocText', true);
+                    performanceObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderLocations();
+            const performanceSection = document.getElementById('performance');
+            if (performanceSection) {
+                performanceObserver.observe(performanceSection);
+            }
+        });
+    </script>
+</body>
+</html>
